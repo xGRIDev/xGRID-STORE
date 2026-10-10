@@ -158,11 +158,12 @@ export default function Topnav(
  
         <div className="hidden items-center gap-3 sm:flex">
           <button ref={profileBtnRef} onClick={() => setProfileOpen((v) => !v)} className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-yellow-400 via-pink-500 to-purple-600" />
-            <div className="hidden lg:block text-left">
-              <p className="text-sm font-semibold text-white">User</p>
-              <p className="text-[10px] text-white/40">user@example.com</p>
-            </div>
+            <div className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-yellow-400 via-pink-500 to-purple-600
+    transition-all duration-300
+    ${profileOpen
+      ? "ring-2 ring-[#8eb69b] ring-offset-2 ring-offset-[#0b2b26] scale-105"
+      : "ring-0 ring-transparent"}`} />
+            
             <ChevronDown ref={chevronRef} size={15} className="text-white/50" />
           </button>
         </div>
@@ -173,12 +174,13 @@ export default function Topnav(
           <div
             ref={dropdownRef}
             style={{ position: "absolute", top: dropdownPos.top, left: dropdownPos.left }}
-            className="z-[100] w-44 rounded-xl border border-white/5 bg-[#1b0c22] p-2 shadow-xl"
+            className="z-[100] w-48 overflow-hidden rounded-2xl border border-[#8eb69b]/20 bg-[transparent]/95 p-1.5
+    shadow-2xl shadow-black/40 backdrop-blur-md"
           >
             {["Profile", "Settings", "Sign out"].map((item) => (
               <button
                 key={item}
-                className="w-full rounded-lg px-3 py-2 text-left text-sm text-white/80 transition-colors hover:bg-[#32133f] hover:text-white"
+                className="w-full rounded-lg px-3 py-2 text-left text-sm text-white/80 transition-colors hover:bg-[#071916] hover:text-white"
               >
                 {item}
               </button>
