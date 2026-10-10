@@ -157,7 +157,7 @@ export default function Topnav(
         </button>
  
         <div className="hidden items-center gap-3 sm:flex">
-          <button ref={profileBtnRef} onClick={() => setProfileOpen((v) => !v)} className="flex items-center gap-3">
+          <button ref={profileBtnRef} onClick={() => setProfileOpen((v) => !v)} className="flex items-center gap-3 cursor-pointer">
             <div className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-yellow-400 via-pink-500 to-purple-600
     transition-all duration-300
     ${profileOpen
