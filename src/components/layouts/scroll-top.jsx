@@ -58,7 +58,7 @@ export default function ScrollTop({ threshold = 300}){
             style={{ display: "none"}} 
             className="fixed bottom-6 right-6 z-[90] flex h-12 w-12 items-center justify-center
               rounded-full bg-[#163832] text-[#daf1de] shadow-lg shadow-black/30
-              transition-colors hover:bg-[#235347] active:scale-95 md:bottom-8 md:right-8">
+              transition-colors hover:bg-[#235347] active:scale-95 md:bottom-8 md:right-8 cursor-pointer">
               <ArrowUp size={20} strokeWidth={2.5}/>
         </button>
     )

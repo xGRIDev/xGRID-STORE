@@ -8,6 +8,7 @@ import { createPortal } from 'react-dom';
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+import SignUp from '../auth/sign-up';
 
 gsap.registerPlugin(useGSAP);
 
@@ -30,6 +31,8 @@ export default function Topnav(
     const [searchFocused, setsearchFocused] = useState(false);
     const [profileOpen, setProfileOpen] = useState(false);
     const [dropdownPos, setDropdownPos] = useState({ top: 0, left: 0});
+
+    const [signUpOpen, setSignUpOpen ] = useState(false);
 
 
     useGSAP(
@@ -161,7 +164,7 @@ export default function Topnav(
             <div className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-yellow-400 via-pink-500 to-purple-600
     transition-all duration-300
     ${profileOpen
-      ? "ring-2 ring-[#8eb69b] ring-offset-2 ring-offset-[#0b2b26] scale-105"
+      ? "ring-2 ring-[#8eb69b] ring-offset-2 ring-offset-[#88D6CA] scale-105"
       : "ring-0 ring-transparent"}`} />
             
             <ChevronDown ref={chevronRef} size={15} className="text-white/50" />
@@ -174,20 +177,30 @@ export default function Topnav(
           <div
             ref={dropdownRef}
             style={{ position: "absolute", top: dropdownPos.top, left: dropdownPos.left }}
-            className="z-[100] w-48 overflow-hidden rounded-2xl border border-[#8eb69b]/20 bg-[transparent]/95 p-1.5
-    shadow-2xl shadow-black/40 backdrop-blur-md"
+            className="z-[100] w-44 overflow-hidden rounded-2xl border border-[#8eb69b]/20 bg-[transparent]/95 p-1.5
+            shadow-2xl shadow-black/40 backdrop-blur-md"
           >
-            {["Profile", "Settings", "Sign out"].map((item) => (
+            {["Profile", "Settings", "Sign-out"].map((item) => (
               <button
                 key={item}
-                className="w-full rounded-lg px-3 py-2 text-left text-sm text-white/80 transition-colors hover:bg-[#071916] hover:text-white"
+                className="w-full rounded-lg px-3 py-2 text-left text-sm text-white/80 transition-colors hover:bg-[#071916] hover:text-white cursor-pointer"
               >
                 {item}
               </button>
             ))}
+            
+            <button onClick={() => {
+              setSignUpOpen(true);
+            }}
+              className="w-full rounded-lg px-3 py-2 text-left text-sm text-white/80 transition-colors hover:bg-[#071916] hover:text-white cursor-pointer">
+                Sign-Up
+              </button>
+              <div className="my-1 h-px bg-white/10"/>
           </div>,
           document.body
         )}
+
+        <SignUp open={signUpOpen} onClose={() => setSignUpOpen(false)}/>
     </header>
     )
 }
