@@ -8,7 +8,7 @@ import { createPortal } from 'react-dom';
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
-import SignUp from '../auth/sign-up';
+import SignUp from '../auth/sign-in';
 
 gsap.registerPlugin(useGSAP);
 
@@ -193,7 +193,7 @@ export default function Topnav(
               setSignUpOpen(true);
             }}
               className="w-full rounded-lg px-3 py-2 text-left text-sm text-white/80 transition-colors hover:bg-[#071916] hover:text-white cursor-pointer">
-                Sign-Up
+                Sign - In
               </button>
               <div className="my-1 h-px bg-white/10"/>
           </div>,
