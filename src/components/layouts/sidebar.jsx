@@ -9,7 +9,11 @@ import {
   Wallet,
   Menu,
   X,
+  Palette,
+  LogOut,
+
 } from "lucide-react";
+import { createPortal } from 'react-dom';
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
@@ -23,12 +27,31 @@ const navigation = [
   { icon: MessageCircle, label: "Chat" },
 ];
 
+const settingsItems = [
+  { icon: Palette, label: "Theme"},
+  { icon: LogOut, label: "Sign-out"},
+]
+
 export default function Sidebar({ expanded = false, onToggle = () => {} }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const backdropRef = useRef(null);
   const panelRef = useRef(null);
   const itemsRef = useRef(null);
+   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false); // keeps it in the DOM during the exit animation
+  const [pos, setPos] = useState({ left: 0, bottom: 0 });
+  const btnRef = useRef(null);
+  const iconRef = useRef(null);
+  const menuRef = useRef(null);
+
+  const toggle = () => {
+    if (open) return setOpen(false);
+    const rect = btnRef.current.getBoundingClientRect();
+    setPos({ left: rect.right + 12, bottom: window.innerHeight - rect.bottom });
+    setMounted(true);
+    setOpen(true);
+  };
 
   /* Mobile drawer open/close */
   useGSAP(
@@ -87,6 +110,50 @@ export default function Sidebar({ expanded = false, onToggle = () => {} }) {
     };
   }, [mobileOpen]);
 
+  useGSAP(
+    () => {
+      gsap.to(iconRef.current, { rotation: open ? 90 : 0, duration: 0.4, ease: "power2.out" });
+      if (!menuRef.current) return;
+
+      gsap.killTweensOf(menuRef.current); 
+      if (open) {
+        gsap.fromTo(
+          menuRef.current,
+          { x: -12, opacity: 0, scale: 0.95 },
+          { x: 0, opacity: 1, scale: 1, duration: 0.3, ease: "power3.out" }
+        );
+        gsap.fromTo(
+          menuRef.current.children,
+          { x: -8, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.25, stagger: 0.05, delay: 0.08, ease: "power2.out" }
+        );
+      } else {
+        gsap.to(menuRef.current, {
+          x: -12, opacity: 0, scale: 0.95, duration: 0.2, ease: "power2.in",
+          onComplete: () => setMounted(false),
+        });
+      }
+    },
+    { dependencies: [open] }
+  );
+
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e) => {
+      if (btnRef.current?.contains(e.target) || menuRef.current?.contains(e.target)) return;
+      setOpen(false);
+    };
+    const onKey = (e) => e.key === "Escape" && setOpen(false);
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  useEffect(() => setOpen(false), [expanded]);
+
   return (
     <>
       <button
@@ -121,7 +188,24 @@ export default function Sidebar({ expanded = false, onToggle = () => {} }) {
         <div className="mt-auto flex w-full flex-col gap-3 px-4.5">
           <div className="mb-2 h-px w-full bg-white/10" />
           <NavButton icon={User} label="Profile" expanded={expanded} />
-          <NavButton icon={Settings} label="Settings" expanded={expanded} />
+           <NavButton
+        icon={Settings} label="Settings" expanded={expanded}
+        open={open} buttonRef={btnRef} iconRef={iconRef} onClick={toggle}
+      />
+      {mounted &&
+        createPortal(
+          <div
+            ref={menuRef}
+            style={{ position: "fixed", left: pos.left, bottom: pos.bottom, transformOrigin: "left bottom" }}
+            className="z-[80] w-52 rounded-2xl border border-[#8eb69b]/20 bg-[#0b2b26]/95 p-1.5
+              shadow-2xl shadow-black/40 backdrop-blur-md"
+          >
+            {settingsItems.map((item) => (
+              <MenuItem key={item.label} {...item} onClick={() => setOpen(false)} />
+            ))}
+          </div>,
+          document.body
+        )}
         </div>
       </aside>
 
@@ -166,20 +250,33 @@ export default function Sidebar({ expanded = false, onToggle = () => {} }) {
         <div className="mt-auto flex flex-col gap-3">
           <div className="mb-2 h-px w-full bg-white/10" />
           <NavButton icon={User} label="Profile" expanded onClick={() => setMobileOpen(false)} />
-          <NavButton icon={Settings} label="Settings" expanded onClick={() => setMobileOpen(false)} />
+          <NavButton icon={Settings} label="Settings" expanded spin onClick={() => setMobileOpen(false)} />
         </div>
       </div>
     </>
   );
 }
 
-function NavButton({ icon: Icon, active, label, expanded, onClick = () => {} }) {
+function NavButton({ icon: Icon, active, label, expanded, open = false, buttonRef, iconRef, onClick = () => {} }) {
+  const innerBtn = useRef(null);
+  const innerIcon = useRef(null);
+  const icnRef = buttonRef ?? innerBtn;
+  const btnRef = iconRef ?? innerIcon;
+
+  const handleClick = (e) => {
+    gsap.fromTo(
+      btnRef.current, 
+      { scale: 0.92},
+      { scale: 1, duration: 0.55, ease: "back.out(3)"});
+      onClick(e);
+  };
   return (
     <button
-      onClick={onClick}
+      ref={btnRef}
+      onClick={handleClick}
       className={`
         flex h-11 w-full items-center gap-3 rounded-xl px-3
-        transition-all duration-300 cursor-pointer
+        transition-colors duration-300 cursor-pointer
         ${
           active
             ? "bg-white text-purple-800 shadow-lg"
@@ -187,7 +284,7 @@ function NavButton({ icon: Icon, active, label, expanded, onClick = () => {} }) 
         }
       `}
     >
-      <Icon size={20} className="shrink-0" />
+      <Icon ref={icnRef} size={20} className="shrink-0" />
       <span
         className={`
           overflow-hidden whitespace-nowrap text-sm font-medium
@@ -200,3 +297,19 @@ function NavButton({ icon: Icon, active, label, expanded, onClick = () => {} }) 
     </button>
   );
 }
+
+function MenuItem({ icon: Icon, label, danger, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium transition-colors cursor-pointer
+        ${danger
+          ? "text-red-300/80 hover:bg-red-500/10 hover:text-red-300"
+          : "text-[#daf1de]/80 hover:bg-[#235347] hover:text-[#daf1de]"}`}
+    >
+      <Icon size={16} className="shrink-0" />
+      {label}
+    </button>
+  );
+}
+
