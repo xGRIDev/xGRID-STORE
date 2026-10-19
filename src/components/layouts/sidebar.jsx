@@ -28,6 +28,7 @@ const navigation = [
 ];
 
 const settingsItems = [
+  { icon: User, label: "Profile"},
   { icon: Palette, label: "Theme"},
   { icon: LogOut, label: "Sign-out"},
 ]
@@ -112,7 +113,7 @@ export default function Sidebar({ expanded = false, onToggle = () => {} }) {
 
   useGSAP(
     () => {
-      gsap.to(iconRef.current, { rotation: open ? 90 : 0, duration: 0.4, ease: "power2.out" });
+      gsap.to(iconRef.current, { rotation: open ? 360 : 0, duration: 0.85, ease: "power2.out" });
       if (!menuRef.current) return;
 
       gsap.killTweensOf(menuRef.current); 
@@ -250,7 +251,7 @@ export default function Sidebar({ expanded = false, onToggle = () => {} }) {
         <div className="mt-auto flex flex-col gap-3">
           <div className="mb-2 h-px w-full bg-white/10" />
           <NavButton icon={User} label="Profile" expanded onClick={() => setMobileOpen(false)} />
-          <NavButton icon={Settings} label="Settings" expanded spin onClick={() => setMobileOpen(false)} />
+          <AccordionSetting onNavigate={() => setMobileOpen(false)} />
         </div>
       </div>
     </>
@@ -310,6 +311,41 @@ function MenuItem({ icon: Icon, label, danger, onClick }) {
       <Icon size={16} className="shrink-0" />
       {label}
     </button>
+  );
+}
+
+function AccordionSetting({ onNavigate }) {
+  const [open, setOpen] = useState(false);
+  const iconRef = useRef(null);
+  const listRef = useRef(null);
+
+  useGSAP(
+    () => {
+      gsap.to(iconRef.current, { rotation: open ? 360 : 0, duration: 0.85, ease: "power2.out" });
+      gsap.to(listRef.current, { height: open ? "auto" : 0, duration: 0.35, ease: "power2.inOut" });
+      if (open) {
+        gsap.fromTo(
+          listRef.current.children,
+          { x: -10, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.25, stagger: 0.05, delay: 0.1 }
+        );
+      }
+    },
+    { dependencies: [open] }
+  );
+
+  return (
+    <div>
+      <NavButton
+        icon={Settings} label="Settings" expanded
+        open={open} iconRef={iconRef} onClick={() => setOpen((v) => !v)}
+      />
+      <div ref={listRef} style={{ height: 0, overflow: "hidden" }} className="pl-3">
+        {settingsItems.map((item) => (
+          <MenuItem key={item.label} {...item} onClick={onNavigate} />
+        ))}
+      </div>
+    </div>
   );
 }
 

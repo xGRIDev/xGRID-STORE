@@ -180,14 +180,7 @@ export default function Topnav(
             className="z-[100] w-44 overflow-hidden rounded-2xl border border-[#8eb69b]/20 bg-[transparent]/95 p-1.5
             shadow-2xl shadow-black/40 backdrop-blur-md"
           >
-            {["Profile", "Settings", "Sign-out"].map((item) => (
-              <button
-                key={item}
-                className="w-full rounded-lg px-3 py-2 text-left text-sm text-white/80 transition-colors hover:bg-[#071916] hover:text-white cursor-pointer"
-              >
-                {item}
-              </button>
-            ))}
+            
             
             <button onClick={() => {
               setSignUpOpen(true);
