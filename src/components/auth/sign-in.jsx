@@ -3,9 +3,11 @@ import { createPortal } from 'react-dom';
 import { FcGoogle } from 'react-icons/fc';
 import { VscTwitter } from "react-icons/vsc";
 import { X } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function SignIn({ open, onClose }){
 
+    const navigate = useNavigate();
     const [ shouldRender, setShouldRender ] = useState(false);
     const [ animateIn, setAnimateIn ] = useState(false);
     const panelRef = useRef(null);
@@ -17,6 +19,11 @@ export default function SignIn({ open, onClose }){
             name: "Twitter", icon: VscTwitter
         }
     ];
+    
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        navigate("/sign-up");
+    }
 
     useEffect(() => {
         if (open) {
@@ -86,7 +93,13 @@ export default function SignIn({ open, onClose }){
                 <span className="text-xs text-white/40">or continue with</span>
                 <div className="h-px flex-1 bg-white/10" />
             </div>
-            <div className="flex flex-col gap-4 px-5">
+            <p className="mt-5 text-center text-xs text-white/40">
+                New ? {" "}
+                <Link to="/sign-up" className="font-semibold text-[#8eb69b] hover:underline">
+                    Create an account
+                </Link>
+            </p>
+            <div className="flex flex-col gap-4 px-5 mt-3">
         {iconProvider.map(({ name, icon: Icon }) => (
           <button
             key={name}

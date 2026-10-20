@@ -4,7 +4,8 @@ import Loading from './components/loaders/loading';
 import './index.css'
 import AOS from 'aos';
 import 'aos/dist/aos.css'
-
+import { Routes, Route } from 'react-router-dom';
+import SignUp from './components/auth/sign-up.jsx';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -17,19 +18,25 @@ function App() {
   
   
     } , []);
-  if(loading)
   
-  return <>
+  return ( 
+  <> 
      {loading && (
         <Loading finishLoading={() => setLoading(false)}
         coverImage="../assets/images/store-icon.png" />
       )}
 
-      {!loading && <Home />}
-    </>;
+      {!loading && ( 
+          <Routes>
+            <Route path="/" element={<Home/>} />
+            <Route path="/sign-up" element={<SignUp/>} />
+          </Routes>
+      )}
+      
+    </>
 
-    return <Home/>;
+  );
 }
 
 
-export default App
+export default App;

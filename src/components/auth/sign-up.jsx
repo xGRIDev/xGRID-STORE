@@ -1,5 +1,11 @@
+import { useNavigate } from 'react-router-dom';
+
 export default function SignUp(){
+    const navigate = useNavigate();
+    
     return (
-        <div className=""></div>
+        <div className="">
+            sign-up page
+        </div>
     )
 }
