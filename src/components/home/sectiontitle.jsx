@@ -67,7 +67,7 @@ export default function SectionTitle({
       <h2 className="
         text-base
         font-semibold
-        text-white
+        text-dark/50
       ">
         {title}
       </h2>
@@ -77,8 +77,8 @@ export default function SectionTitle({
         onClick={() => setFilterOpen((v) => !v)}
         className={`flex h-11 shrink-0 items-center gap-2 rounded-full border px-4 text-sm font-medium transition-colors ${
             isFiltering
-              ? "border-purple-500/50 bg-purple-500/10 text-purple-300"
-              : "border-white/5 bg-white/5 text-white/70 hover:text-white"
+               ? "bg-primary text-on-primary shadow-lg"
+            : "text-fg/70 hover:bg-fg/10 hover:text-fg"
           }`
         }>
           <SlidersHorizontal size={19}/>

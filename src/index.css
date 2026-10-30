@@ -1,10 +1,29 @@
 @import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
 * {
   box-sizing: border-box;
+  font-family: "Lexend Tera", sans-serif;
 }
 
-body {
-  margin: 0;
-  font-family: "Lexend Tera", sans-serif;
-  background: #434343;
+:root {
+  --page-from: #f8f4e3;  --page-via: #dcebe0;  --page-to: #cfe3d6;
+  --surface: #9a998c;    --surface-2: #e6f0e9;
+  --fg: #0b2b26;         --accent: #235347;
+  --primary: #163832;    --on-primary: #daf1de;
+}
+
+.dark {
+  --page-from: #051F20;  --page-via: #163832;  --page-to: #0b2b26;
+  --surface: #0b2b26;    --surface-2: #163832;
+  --fg: #daf1de;         --accent: #8eb69b;
+  --primary: #daf1de;    --on-primary: #051F20;
+}
+
+@theme inline {
+  --color-page-from: var(--page-from);  --color-page-via: var(--page-via);  --color-page-to: var(--page-to);
+  --color-surface: var(--surface);      --color-surface-2: var(--surface-2);
+  --color-fg: var(--fg);                --color-accent: var(--accent);
+  --color-primary: var(--primary);      --color-on-primary: var(--on-primary);
 }

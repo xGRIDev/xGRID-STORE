@@ -7,6 +7,12 @@
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Lexend+Tera:wght@100..900&display=swap');
     </style>
+     <script>
+      (function () {
+        var togg = localStorage.getItem("theme");
+        document.documentElement.classList.toggle("dark", togg ? togg == "dark" : true); 
+      })();
+    </script>
     <title>xgrid-store</title>
   </head>
   <body>

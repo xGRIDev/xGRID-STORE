@@ -16,6 +16,7 @@ import {
 import { createPortal } from 'react-dom';
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import  {useTheme}  from "../styles/themes";
 
 gsap.registerPlugin(useGSAP);
 
@@ -45,8 +46,9 @@ export default function Sidebar({ expanded = false, onToggle = () => {} }) {
   const btnRef = useRef(null);
   const iconRef = useRef(null);
   const menuRef = useRef(null);
+  const { theme, toggle } = useTheme();
 
-  const toggle = () => {
+  const tgle = () => {
     if (open) return setOpen(false);
     const rect = btnRef.current.getBoundingClientRect();
     setPos({ left: rect.right + 12, bottom: window.innerHeight - rect.bottom });
@@ -157,6 +159,7 @@ export default function Sidebar({ expanded = false, onToggle = () => {} }) {
 
   return (
     <>
+    {/**Desktop - View */}
       <button
         onClick={() => setMobileOpen(true)}
         className="fixed left-4 top-4 z-40 flex h-11 w-11 items-center justify-center rounded-full bg-[#1b0c22] text-white md:hidden cursor-pointer"
@@ -167,14 +170,14 @@ export default function Sidebar({ expanded = false, onToggle = () => {} }) {
 
       <aside
         className={`fixed left-4 top-4 bottom-4 z-50 hidden flex-col items-center rounded-[24px]
-        bg-[transparent] py-5 md:flex transition-[width] duration-300 ease-in-out
+        bg-page-from py-5 md:flex transition-[width] duration-300 ease-in-out shadow-xl/30
         ${expanded ? "w-[200px]" : "w-[78px]"}`}
       >
-        <button onClick={onToggle} className="mb-7 text-white cursor-pointer">
+        <button onClick={onToggle} className="mb-7 text-fg cursor-pointer">
           <Menu size={24} strokeWidth={2.5} />
         </button>
 
-        <div className="flex w-full flex-col gap-3 px-4">
+        <div className="flex w-full flex-col gap-3 px-4 ">
           {navigation.map((item, index) => (
             <NavButton
               key={index}
@@ -191,18 +194,26 @@ export default function Sidebar({ expanded = false, onToggle = () => {} }) {
           <NavButton icon={User} label="Profile" expanded={expanded} />
            <NavButton
         icon={Settings} label="Settings" expanded={expanded}
-        open={open} buttonRef={btnRef} iconRef={iconRef} onClick={toggle}
+        open={open} buttonRef={btnRef} iconRef={iconRef} onClick={tgle}
       />
       {mounted &&
         createPortal(
           <div
             ref={menuRef}
             style={{ position: "fixed", left: pos.left, bottom: pos.bottom, transformOrigin: "left bottom" }}
-            className="z-[80] w-52 rounded-2xl border border-[#8eb69b]/20 bg-[#0b2b26]/95 p-1.5
+            className="z-[80] w-52 rounded-2xl border border-[#8eb69b]/20 bg-[#0b2b26]/25 p-1.5
               shadow-2xl shadow-black/40 backdrop-blur-md"
           >
             {settingsItems.map((item) => (
-              <MenuItem key={item.label} {...item} onClick={() => setOpen(false)} />
+              <MenuItem
+    key={item.label}
+    {...item}
+    label={item.label === "Theme" ? (theme === "dark" ? "Light theme" : "Dark theme") : item.label}
+    onClick={() => {
+      if (item.label === "Theme") toggle();
+      setOpen(false);
+    }}
+  />
             ))}
           </div>,
           document.body
@@ -210,6 +221,7 @@ export default function Sidebar({ expanded = false, onToggle = () => {} }) {
         </div>
       </aside>
 
+    { /**Mobile - View */}
       <div
         ref={backdropRef}
         onClick={() => setMobileOpen(false)}
@@ -220,7 +232,7 @@ export default function Sidebar({ expanded = false, onToggle = () => {} }) {
       <div
         ref={panelRef}
         style={{ display: "none" }}
-        className="fixed left-0 top-0 bottom-0 z-[70] w-[260px] flex-col bg-[#0b2b26] p-5 md:hidden"
+        className="fixed left-0 top-0 bottom-0 z-[70] w-[260px] flex-col bg-surface p-5 text-fg shadow-2xl md:hidden"
       >
         <div className="mb-8 flex items-center justify-between">
           <span className="text-lg font-black tracking-tight text-[#daf1de]">
@@ -228,7 +240,7 @@ export default function Sidebar({ expanded = false, onToggle = () => {} }) {
           </span>
           <button
             onClick={() => setMobileOpen(false)}
-            className="flex h-9 w-9 items-center justify-center rounded-full text-white/70 hover:bg-white/10 hover:text-white"
+            className="flex h-9 w-9 items-center justify-center rounded-full text-fg/70 hover:bg-fg/10 hover:text-fg"
             aria-label="Close menu"
           >
             <X size={20} />
@@ -249,7 +261,7 @@ export default function Sidebar({ expanded = false, onToggle = () => {} }) {
         </div>
 
         <div className="mt-auto flex flex-col gap-3">
-          <div className="mb-2 h-px w-full bg-white/10" />
+          <div className="mb-2 h-px w-full bg-fg/10" />
           <NavButton icon={User} label="Profile" expanded onClick={() => setMobileOpen(false)} />
           <AccordionSetting onNavigate={() => setMobileOpen(false)} />
         </div>
@@ -258,7 +270,7 @@ export default function Sidebar({ expanded = false, onToggle = () => {} }) {
   );
 }
 
-function NavButton({ icon: Icon, active, label, expanded, open = false, buttonRef, iconRef, onClick = () => {} }) {
+function NavButton({ icon: Icon, active, label, expanded, buttonRef, iconRef, onClick = () => {} }) {
   const innerBtn = useRef(null);
   const innerIcon = useRef(null);
   const icnRef = buttonRef ?? innerBtn;
@@ -277,11 +289,13 @@ function NavButton({ icon: Icon, active, label, expanded, open = false, buttonRe
       onClick={handleClick}
       className={`
         flex h-11 w-full items-center gap-3 rounded-xl px-3
-        transition-colors duration-300 cursor-pointer
+        transition-colors duration-600 cursor-pointer
         ${
           active
-            ? "bg-white text-purple-800 shadow-lg"
-            : "text-white/70 hover:bg-white/10 hover:text-white"
+            ? "bg-primary text-on-primary shadow-lg"
+            : open 
+            ? "bg-fg/10 text-fg"
+            : "text-fg/70 hover:bg-fg/10 hover:text-fg"
         }
       `}
     >
@@ -305,8 +319,8 @@ function MenuItem({ icon: Icon, label, danger, onClick }) {
       onClick={onClick}
       className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium transition-colors cursor-pointer
         ${danger
-          ? "text-red-300/80 hover:bg-red-500/10 hover:text-red-300"
-          : "text-[#daf1de]/80 hover:bg-[#235347] hover:text-[#daf1de]"}`}
+          ? "ttextark:hover:text-red-300"
+          : "text-fg/80 hover:bg-surface-2 hover:text-fg"}`}
     >
       <Icon size={16} className="shrink-0" />
       {label}
@@ -314,11 +328,12 @@ function MenuItem({ icon: Icon, label, danger, onClick }) {
   );
 }
 
-function AccordionSetting({ onNavigate }) {
+function AccordionSetting({ onNavigate = () => {}}) {
   const [open, setOpen] = useState(false);
   const iconRef = useRef(null);
   const listRef = useRef(null);
-
+  const { theme, toggle} = useTheme();
+  const themeLabel = (theme) => (theme === "dark" ? "Light theme" : "Dark theme");
   useGSAP(
     () => {
       gsap.to(iconRef.current, { rotation: open ? 360 : 0, duration: 0.85, ease: "power2.out" });
@@ -341,9 +356,17 @@ function AccordionSetting({ onNavigate }) {
         open={open} iconRef={iconRef} onClick={() => setOpen((v) => !v)}
       />
       <div ref={listRef} style={{ height: 0, overflow: "hidden" }} className="pl-3">
-        {settingsItems.map((item) => (
-          <MenuItem key={item.label} {...item} onClick={onNavigate} />
-        ))}
+        {settingsItems.map((item) => {
+          const isTheme = item.label === "Theme";
+          return (
+          <MenuItem
+              key={item.label}
+              {...item}
+              label={isTheme ? themeLabel(theme) : item.label}
+              onClick={isTheme ? toggle : onNavigate}
+            />
+          )
+          })}
       </div>
     </div>
   );

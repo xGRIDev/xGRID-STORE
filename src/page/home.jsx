@@ -36,7 +36,7 @@ const categories = useMemo(() => {
   const isFiltering = searchValue.trim() !== "" || selectedCategory !== "All";
   const [ sidebarOpen, setSidebarOpen] = useState(false);
     return (
-        <div className="min-h-screen bg-linear-to-r from-[#495057] via-[#343a40] to-[#212529] text-white">
+        <div className="min-h-screen --surface text-fg">
             <Sidebar expanded={sidebarOpen} onToggle={() => setSidebarOpen((v) => !v)}/>
             <main className={`min-h-screen px-4 py-4 transition-[margin] duration-300 md:px-6 lg:px-8
             ${sidebarOpen ? "md:ml-[224px]" : "md:ml-[102px]"}`}>

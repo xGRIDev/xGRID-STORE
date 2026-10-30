@@ -134,7 +134,7 @@ export default function Topnav(
     return (
       <header ref={headerRef} className="relative z-50 mb-6 flex items-center gap-4">
       <div ref={searchWrapRef} className="relative max-w-[430px] flex-1 rounded-full">
-        <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40" />
+        <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-dark/60" />
         <input
           type="text"
           value={searchValue}
@@ -142,7 +142,7 @@ export default function Topnav(
           onFocus={() => setsearchFocused(true)}
           onBlur={() => setsearchFocused(false)}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="h-11 w-full rounded-full border border-white/5 bg-[transparent] pl-11 pr-5 text-sm text-white outline-none placeholder:text-white/30 focus:border-zinc-200 transition-colors"
+          className="h-11 w-full rounded-full border border-surface/5 bg-surface/30 pl-11 pr-5 text-sm text-dark outline-none placeholder:text-on-fg/30 focus:border-dark-600 transition-colors"
         />
       </div>
  
@@ -153,7 +153,7 @@ export default function Topnav(
  
         <button
           ref={bellRef}
-          className="relative flex h-11 w-11 items-center justify-center rounded-full bg-[#32133f] text-white transition-transform duration-200 hover:scale-105 hover:bg-[#461854] active:scale-95"
+          className="relative flex h-11 w-11 items-center justify-center rounded-full bg-[#32133f] text-white transition-transform duration-200 hover:scale-105 hover:bg-[#522E5D] active:scale-95"
         >
           <Bell size={19} />
           <span className="notif-dot absolute right-2 top-2 h-2 w-2 rounded-full bg-pink-500" />

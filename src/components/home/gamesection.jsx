@@ -41,11 +41,11 @@ export default function GameSection({
  
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
         {visibleGames.map((game) => (
-          <div key={game.id} className="rounded-xl bg-white/5 p-3">
+          <div key={game.id} className="rounded-xl bg-fg/20 p-3">
             <img src={game.image} alt={game.name} loading="lazy" className="aspect-[3/4] w-full object-cover" />
-            <p className="text-sm font-semibold text-white">{game.name}</p>
-            <p className="text-xs text-white/50">{game.category}</p>
-            <p className="mt-1 text-sm text-purple-300">{game.price}</p>
+            <p className="text-sm font-semibold text-fg">{game.name}</p>
+            <p className="text-xs text-fg/55">{game.category}</p>
+            <p className="mt-1 text-sm text-fg">{game.price}</p>
           </div>
         ))}
       </div>
